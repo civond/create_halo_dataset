@@ -118,7 +118,11 @@ for file in os.listdir(data_dir):
             "coord": coords_array
         })
 
+        print(f"Writing .csv")
         df.to_csv("dataset.csv", index=False)
+        val_counts = df["halo_present"].value_counts()
+        print(val_counts)
+
         #cv2.imwrite(f"test.png", img)
     
 
