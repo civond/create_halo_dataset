@@ -1,0 +1,14 @@
+# Settings for image tiling
+
+tile_size = 1024
+output_directory = "./output/"
+raster_directories = [
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\BLZ02a',
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\BLZ03a',
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\BHS01',
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\BLZ01',
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\BHS02',
+    #'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\EGY01b',
+    'C:\Users\Dorian\Desktop\Storage\Work\Madin Lab\Halo Project Satellite Images\EGY01c',
+    
+]
