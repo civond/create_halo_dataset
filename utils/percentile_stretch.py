@@ -2,7 +2,6 @@ import numpy as np
 
 # Perform percentile-based contrast stretching of a single RGB band
 def percentile_stretch(band):
-    print("\tStretching img")
     band = band.astype(np.float32)
 
     p2 = np.nanpercentile(band, 2)              # 2% intensity
