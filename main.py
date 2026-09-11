@@ -53,11 +53,10 @@ def main():
         # Load and Process .shp
         mask = load_mask(tif_path, shp_path)
         mask = (mask > 0).astype(np.uint8) * 255
-        cv2.imwrite(f"test_dmask.png", mask)
 
         # Load and Process .tif
-        [img, profile] = load_tif(tif_path)            # Load .tif
-        img = np.transpose(img, (1, 2, 0))                        # Reshape from (C,H,W) -> (H,W,C)
+        [img, profile] = load_tif(tif_path)                         # Load .tif
+        img = np.transpose(img, (1, 2, 0))                          # Reshape from (C,H,W) -> (H,W,C)
         max_vals = np.max(img, axis=(0, 1))
         print(f"\tChannel max vals: {max_vals}")
         means = np.mean(img, axis=(0, 1))
@@ -69,6 +68,11 @@ def main():
         NIR_IDX = 3
         img = img[:, :, RGB_IDX].astype(np.float32)
         img = np.where(img == 0, np.nan, img)
+
+        # Cut off mask at image edges
+        mask_cutoff = np.all(img == 0, axis=2)
+        mask[mask_cutoff] = 0
+        cv2.imwrite(f"test_dmask.png", mask)
 
         # Perform percentile stretch
         for i in range(3):
@@ -98,8 +102,8 @@ def main():
 
 
         # Create output directory
-        img_write_dir = os.path.join(output_directory, "img")
-        mask_write_dir = os.path.join(output_directory, "mask")
+        img_write_dir = os.path.join(output_directory, tif_name, "img")
+        mask_write_dir = os.path.join(output_directory, tif_name, "mask")
         os.makedirs(img_write_dir, exist_ok=True)
         os.makedirs(mask_write_dir, exist_ok=True)
         
@@ -108,6 +112,7 @@ def main():
         mask_path_array = []
 
         halo_present_array = []
+        num_objects_array = []
         coords_array = []
 
         # Loop through tiles
@@ -129,8 +134,14 @@ def main():
                 # If object present in mask
                 if np.max(mask_tile) == 255:
                     halo_present_array.append(True)
+    
+                    num_labels, labels = cv2.connectedComponents(mask_tile)         # Count connected components (subtract 1 to exclude background label)
+                    num_objects = num_labels - 1
+                    num_objects_array.append(num_objects)
+
                 else:
                     halo_present_array.append(False)
+                    num_objects_array.append(0)
 
                 print(f"\tWriting to: {temp_img_path}")
                 cv2.imwrite(temp_img_path, img_tile)
@@ -143,6 +154,7 @@ def main():
             "coord": coords_array,
             "tile_size": tile_size,
             "halo_present": halo_present_array,
+            "num_objects": num_objects_array,
         })
 
         print(f"Writing .csv")

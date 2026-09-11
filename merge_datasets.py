@@ -16,9 +16,7 @@ combined_dataset = pd.concat(datasets, ignore_index=True)
 combined_dataset = combined_dataset.sample(frac=1, random_state=42).reset_index(drop=True)
 combined_dataset['fold'] = np.arange(len(combined_dataset)) % 5
 combined_dataset = combined_dataset.sort_values('fold').reset_index(drop=True)
-#folds = np.array_split(combined_dataset, 5)
 
 print(combined_dataset)
 print(combined_dataset['halo_present'].value_counts(dropna=False))
 combined_dataset.to_csv('output.csv', index=False)
-#print(folds)
